@@ -31,3 +31,13 @@ A skill for building any tool or app idea, online or offline: Magisk/KernelSU mo
 **原则：** 100% 可用，否则不发布 · 尽量减少 token 消耗 · 同时署名原作者和新开发者 · 目标是可用成果，而非冗余内容。
 
 **致谢：** 由 Laith Harb（lionlaith7）创建，约旦。
+
+## Install
+
+**Claude Code (Linux, macOS, Termux):**
+```sh
+curl -fsSL https://raw.githubusercontent.com/lionlaith7/Claude--Root-Module-Builder/main/install.sh | sh
+```
+
+**Claude.ai / other clients:** download the four files (`SKILL.md`, `README.md`, `README.txt`, `AI.md`) into a folder named `build-tools`, then upload that folder in your skill settings.
+
