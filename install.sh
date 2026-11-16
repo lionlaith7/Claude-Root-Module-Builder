@@ -4,7 +4,7 @@
 # Kid note: this copies the instruction files into the place where Claude looks for skills.
 set -eu
 
-REPO="https://raw.githubusercontent.com/lionlaith7/Claude--Root-Module-Builder/main"
+REPO="https://raw.githubusercontent.com/lionlaith7/Claude-Root-Module-Builder/main"
 DEST="${CLAUDE_SKILLS_DIR:-$HOME/.claude/skills}/build-tools"
 FILES="SKILL.md README.md README.txt AI.md"
 

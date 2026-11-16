@@ -36,7 +36,7 @@ A skill for building any tool or app idea, online or offline: Magisk/KernelSU mo
 
 **Claude Code (Linux, macOS, Termux):**
 ```sh
-curl -fsSL https://raw.githubusercontent.com/lionlaith7/Claude--Root-Module-Builder/main/install.sh | sh
+curl -fsSL https://raw.githubusercontent.com/lionlaith7/Claude-Root-Module-Builder/main/install.sh | sh
 ```
 
 **Claude.ai / other clients:** download the four files (`SKILL.md`, `README.md`, `README.txt`, `AI.md`) into a folder named `build-tools`, then upload that folder in your skill settings.
