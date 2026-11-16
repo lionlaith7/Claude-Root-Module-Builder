@@ -1,85 +1,67 @@
 ---
 name: build-tools
-description: Use when creating or improving any tool or app idea, online or offline, including Magisk/KernelSU modules, scripts, CLIs, and web tools. Enforces working tested output, readable code, a GitHub README, a machine-readable AI.md, a human README.txt, trilingual docs, and developer credits.
+description: Builds a small tool, app or script that really works, then tests it before sharing. For phone modules (Magisk, KernelSU), scripts, command tools and web pages. Adds a simple README, AI notes and credits.
 ---
 
-# Build Tools
+# build-tools
 
-Goal: a tool that works. No padding, no untested features.
+Goal: a tool that works. Nothing extra, nothing untested.
 
-## Rules
-1. **Works 100% or is not shipped.** Every feature needs a test that ran. Drop untestable features and list them, with the reason, in the final message.
-2. **Minimal tokens.** Read only needed line ranges (grep first). Never reprint whole files. Summarize test output as counts plus failing names.
-3. **Credit everyone.** Keep the original developer's name and link, then add the new one. Format: `Original by <name> (<link>) · Enhanced by <name> (<username>)`. Check the original license before reusing code.
-4. **Start immediately.** Choose sensible defaults. Ask only when a wrong guess is costly and irreversible.
+## Four rules
+1. **Works, or it is not shipped.** Every feature gets a test that really runs. If a feature cannot be tested, leave it out and say why.
+2. **Short and clear.** Read only the lines you need. Show test results as counts and failing names only.
+3. **Give credit.** Keep the original maker's name and link, then add the new maker. Format: `Original by <name> (<link>) · Enhanced by <name> (<username>)`. Check the license before reusing code.
+4. **Start now.** Pick sensible defaults. Ask only when a wrong guess is costly and cannot be undone.
 
 ## Steps
-1. **Classify:** offline or online; platform (Android module, web page, CLI, script).
-2. **Define done:** one-sentence goal plus checkable acceptance criteria.
-3. **Build the smallest working version,** then add features one at a time, each with its test.
-4. **Test in a sandbox that mirrors the real environment:**
-   - Shell: run under `dash` and `bash --posix`; `sh -n` every script; use fixtures with awkward names (spaces, Arabic, quotes, long names).
-   - Web: drive the page with Playwright; mock native bridges.
-   - Package: unpack the final archive, run it on a copy, check permissions and executable bits.
-   - Remove sandbox paths afterward.
-5. **Deliver** the package plus the docs below, and a final message: what works, what was dropped and why, test counts.
+1. **Pick the kind:** online or offline; phone module, web page, command tool or script.
+2. **Say what done means:** one sentence, plus checks you can run.
+3. **Build the smallest version that works.** Add one feature at a time, each with a test.
+4. **Test in a copy of the real setup:**
+   - Shell scripts: run with `sh` and `bash --posix`; run `sh -n` on each file; use file names with spaces, Arabic, quotes and long names.
+   - Web pages: open them in Playwright; fake the phone bridge.
+   - Package: unzip the final file somewhere new, check permissions, run it on a copy.
+   - Delete sandbox files afterward.
+5. **Share** the package, the docs below, and a short final message: what works, what was left out and why, and test counts.
 
-## Code organization (readable by developers, AI models, and children)
-- One responsibility per file. Keep files under about 400 lines; split otherwise.
-- Header comment on every file: `# File: <name>`, `# Purpose: <one sentence>`, `# Kid note: <one simple sentence, like explaining to a 10-year-old>`.
-- Name functions as verbs (`move_item`, `check_power`). Name variables for their content, never single letters except loop counters.
-- One short comment above each non-obvious block: say why, not what.
-- Put constants and paths at the top of the file, in one place.
-- Keep a single entry point; other files only provide functions.
+## Code rules (for people, AI and children)
+- One job per file. Keep files under about 400 lines.
+- Start each file with three lines: `File:` (name), `Purpose:` (one sentence), `Kid note:` (one simple sentence, as if for a 10-year-old).
+- Name functions with a verb (`move_item`, `check_power`). Name variables by what they hold.
+- Add a short comment above each tricky part, saying *why*, not *what*.
+- Keep settings and paths at the top of each file.
 - No dead code, no commented-out blocks, no unused variables.
 
-## Docs set (required for every shipped tool)
-| File | Audience | Language | Content |
+## Docs to ship
+| File | For | Language | What it has |
 |---|---|---|---|
-| `README.md` | GitHub visitors | English, Arabic, Chinese in sections | Description, install, usage, config table, limits, credits, license |
-| `README.txt` | Humans on the device | English, Arabic, Chinese in sections | Plain-text version of the README, no markdown, short sentences |
-| `AI.md` | AI models | Any (English preferred) | Machine-oriented map of the tool; see below |
-| `CHANGELOG.md` | Everyone | English | Only tested changes |
+| `README.md` | GitHub visitors | English, Arabic, Chinese | What it is, install, use, settings table, limits, credits, license |
+| `README.txt` | People on the device | English, Arabic, Chinese | Same as README, plain text, short sentences |
+| `AI.md` | AI models | English | Map of the files, data flow, rules that must not break, how to test, signatures |
+| `CHANGELOG.md` | Everyone | English | Only changes that were tested |
 
-Keep each language equivalent in meaning. Do not make one language longer than the others.
+Each language says the same thing. Do not let one language be much longer than the others.
 
-### AI.md (for models, not people)
-Write it so a model can understand and modify the tool without reading every file. Include:
-- **Identity:** name, version, purpose in one sentence, platform, online or offline.
-- **File map:** each file with its role and the functions it defines.
-- **Data flow:** inputs, outputs, where state lives (config, status, logs, journals).
-- **Invariants:** rules the code must never break (for example, never overwrite a user file).
-- **Entry points and how to test.**
-- **Signatures:**
-  - Skill used: `build-tools` (version).
-  - Models used in development: list each model ID actually used.
-  - Developer: name, username, country.
-  - Original developer and link, if any.
+### AI.md
+Let a model change the tool without reading every file. Include: identity, file map with functions, data flow, invariants, test commands, and signatures (skill name and version, models used with exact IDs, developer name, username and country, original developer and link).
 
-## README and docs rules
-- No marketing text. Install and usage first.
-- Every number in the docs (defaults, limits) must match the code. Verify before shipping.
+## Phone module specifics (Magisk / KernelSU)
+- `module.prop` has a `versionCode` that goes up every release.
+- Provide both `META-INF/com/google/android/update-binary` and `updater-script` (containing `#MAGISK`) so both managers install it.
+- Use plain `sh` only: no `[[`, arrays, `local`, or GNU-only flags.
+- Never write to an unmounted storage folder. Check the device number against `/storage`.
+- Never overwrite or delete user files unless asked.
+- Settings are read as data, validated, with a backup and defaults as fallback.
+- Background service: one instance only (pid file), wait for `sys.boot_completed`, re-read settings each cycle.
 
-## Magisk / KernelSU specifics
-- `module.prop` with a `versionCode` that increases every release.
-- `META-INF/com/google/android/update-binary` and `updater-script` (content `#MAGISK`) so it installs on both managers.
-- POSIX `sh` only: no `[[`, arrays, `local`, `awk`, or GNU-only flags.
-- Never write to an unmounted storage stub; compare the device number against `/storage`.
-- Never overwrite user files. Never delete user data unless explicitly asked.
-- Config is shell-sourced: validate with `sh -n`, fall back to `.bak`, then defaults. Quote values and escape `\ " $` and backtick.
-- Background service: single instance (pid file), wait for `sys.boot_completed`, re-read config each cycle, exit cleanly on kill.
-- WebUI: support both `ksu.exec` signatures and Promise returns. Keep i18n keys identical across languages, checked by test.
-
-## Offline vs online
-- Offline: no network calls; state that in the README.
-- Online: list every domain contacted and what data is sent. Make network use optional where possible. Never send personal data.
-
-## Extra quality features
-- **Version bump rule:** every shipped change bumps the version in all places (module.prop, docs, CHANGELOG). A test checks that they match.
-- **Self-check command:** every tool offers a `selftest` (or equivalent) that reports OK, WARN, or FAIL lines.
-- **Undo for anything that moves or deletes user data.**
-- **Dry-run mode** for any action that changes files.
-- **Log lines** start with a level (`INFO`, `WARN`, `ERROR`) so they can be filtered.
+## Other rules
+- **Offline tools** make no network calls. Say so in the README.
+- **Online tools** list every site they contact and what data they send. Never send personal data.
+- **Every release** bumps the version everywhere, and a test checks that they match.
+- **Every tool** has a `selftest` command that prints OK, WARN or FAIL lines.
+- **Anything that moves files** needs Undo and a dry-run mode.
+- **Log lines** start with `INFO`, `WARN` or `ERROR`.
+- **Docs numbers** (defaults, limits) must match the code. Check them before shipping.
 
 ## Final message
-Short. Lead with the deliverable. Then: tests passed (counts), features dropped and why, and one next step only if it matters.
+Short. Lead with the file. Then: test counts, what was left out and why, and one next step only if it matters.

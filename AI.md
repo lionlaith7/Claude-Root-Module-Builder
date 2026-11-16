@@ -1,21 +1,32 @@
-# AI.md — build-tools (skill)
+# AI.md — build-tools
 
-Identity: build-tools, a skill for building tools and apps (online or offline) with tested, documented, readable output.
-Platform: any agent that loads SKILL.md. Offline: no network calls by the skill itself.
+## Identity
+- Name: build-tools (Claude skill)
+- Version: 2.0
+- Purpose: guide Claude to build small tools that work, are tested, and are documented.
+- Platform: any (phone modules, scripts, CLIs, web pages).
 
-## Files
-- SKILL.md: the full instructions (rules, steps, docs set, quality features). Read this first.
-- README.md: GitHub-facing docs (English, Arabic, Chinese).
-- README.txt: plain-text docs for people (English, Arabic, Chinese).
-- AI.md: this file.
+## File map
+- `SKILL.md`: the full instructions (rules, steps, code rules, docs set, phone module rules).
+- `README.md`: GitHub guide (English) for this skill.
+- `README.txt`: plain-text guide (English, Arabic, Chinese).
+- `install.sh`: downloads SKILL.md, README.md, README.txt, AI.md into the Claude skills folder.
+
+## Data flow
+- Input: the user's request.
+- Output: a tool folder with code, README.md, README.txt, AI.md, CHANGELOG.md, and a package.
+- No state is stored by this skill.
 
 ## Invariants
-- A feature ships only if its test ran and passed.
-- Credits keep the original developer and add the new one.
-- Versions match across module.prop, docs, and CHANGELOG.
+- Do not ship a feature that has no passing test.
+- Keep original credits; add the new developer's name.
+- Never overwrite user files unless asked.
+
+## How to test this skill
+- `sh -n install.sh`
+- Run `install.sh` with `CLAUDE_SKILLS_DIR` set to an empty folder; check the four files exist and are not empty.
 
 ## Signatures
-- Skill: build-tools, version 1.1.
-- Models used in development: claude-sonnet-5-5 (main build), claude-haiku-5-5 (later revisions).
-- Skill developer: Laith Harb, username lionlaith7, Jordan.
-- Original developer: none for this skill.
+- Skill: build-tools 2.0.
+- Developer: Laith Harb, GitHub lionlaith7, Jordan.
+- Models used in development: claude-sonnet-5-5, claude-haiku-5-5.
