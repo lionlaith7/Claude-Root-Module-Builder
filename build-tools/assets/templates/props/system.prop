@@ -1,0 +1,2 @@
+# Properties loaded by the manager (build.prop format: name=value). Replace the example.
+debug.@IDSAFE@.enabled=1

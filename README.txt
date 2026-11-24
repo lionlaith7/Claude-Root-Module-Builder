@@ -1,68 +1,32 @@
-BUILD-TOOLS
-A skill for Claude. It helps build a small tool that works.
+build-tools 3.0 - Claude skill for Android root modules (Magisk / KernelSU / FinaSU)
+By Laith Harb (lionlaith7), Jordan.
 
-WHAT IT DOES
-- It builds a tool step by step.
-- It tests each feature before saying it works.
-- It writes simple docs and gives credit.
-
-HOW TO INSTALL
-Run this in a terminal:
-curl -fsSL https://raw.githubusercontent.com/lionlaith7/Claude-Root-Module-Builder/main/install.sh | sh
-Then restart Claude.
-
-RULES
-- A feature that does not work is not shipped.
-- Code has a short kid-friendly note at the top.
-- Credit goes to the original maker and to the new maker.
-
-CREDITS
-Maintained by Laith Harb (lionlaith7), Jordan.
-
-=====================================
+ENGLISH
+- Builds a module for any idea. Every module writes a debug log:
+  /sdcard/Documents/<id>/<id>-debug.log  (kept early in /data/adb/<id>-logs/)
+- Send that log to Claude to improve the module.
+- Tools in build-tools/scripts: new_module.py, lint_module.py, build_zip.py, parse_report.py
+- Templates: basic, service, props, canary.
+- After 3 unfinished boots the module disables itself (file "disable").
+- Tested offline only (structure + shell simulation). Not tested on a real phone yet.
+- Install: sh install.sh  (folder name must be build-tools)
 
 العربية
-
-مهارة لـ Claude. تساعد في بناء أداة صغيرة تعمل.
-
-ماذا تفعل
-- تبني الأداة خطوة بخطوة.
-- تختبر كل ميزة قبل أن تقول إنها تعمل.
-- تكتب توثيقاً بسيطاً وتذكر المطورين.
-
-طريقة التثبيت
-شغّل هذا الأمر في الطرفية:
-curl -fsSL https://raw.githubusercontent.com/lionlaith7/Claude-Root-Module-Builder/main/install.sh | sh
-ثم أعد تشغيل Claude.
-
-القواعد
-- الميزة التي لا تعمل لا تُنشر.
-- كل ملف يبدأ بملاحظة بسيطة يفهمها الطفل.
-- الاعتماد للمطور الأصلي ولك.
-
-الاعتمادات
-صيانة: Laith Harb (lionlaith7)، الأردن.
-
-=====================================
+- يبني مديول لأي فكرة. كل مديول يكتب سجل أخطاء في:
+  /sdcard/Documents/<id>/<id>-debug.log  (ويُحفظ مبكرا في /data/adb/<id>-logs/)
+- أرسل السجل إلى Claude لتحسين المديول.
+- الأدوات في build-tools/scripts: new_module.py و lint_module.py و build_zip.py و parse_report.py
+- القوالب: basic و service و props و canary.
+- بعد 3 إقلاعات غير مكتملة يعطل المديول نفسه (ملف disable).
+- الاختبار تم على الحاسوب فقط (بنية + محاكاة). لم يُجرَّب على الهاتف بعد.
+- التثبيت: sh install.sh (اسم المجلد يجب أن يكون build-tools)
 
 中文
-
-这是 Claude 的一个技能。帮助你做出一个能正常工作的小工具。
-
-它做什么
-- 一步一步地制作工具。
-- 每个功能都先测试，再说它能用。
-- 写简单的文档并注明作者。
-
-如何安装
-在终端运行：
-curl -fsSL https://raw.githubusercontent.com/lionlaith7/Claude-Root-Module-Builder/main/install.sh | sh
-然后重启 Claude。
-
-规则
-- 不能工作的功能不发布。
-- 每个文件开头都有一句孩子也能懂的说明。
-- 署名：原作者和新作者都要写。
-
-致谢
-维护者：Laith Harb (lionlaith7)，约旦。
+- 可为任何想法构建模块。每个模块都会写调试日志：
+  /sdcard/Documents/<id>/<id>-debug.log（启动早期保存在 /data/adb/<id>-logs/）
+- 把日志发给 Claude 即可改进模块。
+- 工具位于 build-tools/scripts：new_module.py、lint_module.py、build_zip.py、parse_report.py
+- 模板：basic、service、props、canary。
+- 3 次未完成启动后模块自动禁用（文件 disable）。
+- 仅在电脑上做了测试（结构 + 模拟），尚未在真机上测试。
+- 安装：sh install.sh（文件夹名必须为 build-tools）
