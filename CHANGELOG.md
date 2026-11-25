@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.9.0
+- Unified design system (new references/design.md): the FinaSU manager theme (deep navy gradient, pink accent, banner cards, bottom navigation with badges — the default dark palette, approved by the author on real modules) merged with Apple HIG principles (via dickwu/apple-design-skill) and Material Design 3 anatomy (via wshobson/agents mobile-android-design: color roles, type scale, shape scale, tonal elevation, navigation bar, segmented buttons, switches). Rule of the merge: M3 supplies role names and anatomy, Apple supplies restraint, FinaSU supplies color. Includes hard speed/smoothness budgets: render-in-place DOM updates, transform/opacity-only animation, canvas redraw caps, backdrop-filter on bars only, poll/service cadence tiers.
+- webui.md design section now points to design.md; the `--webui` starter template ships the unified tokens (FinaSU dark default + light scheme) and the v3.8 callback-name bridge form.
+- patterns.md gained everything learned building HotMod v2 / SysDiag Lab v2 / Sortify v9: FinaSU `banner=` convention, modules.kernelsu.org catalog integration (list + install with SHA-256 verify), best-effort superuser grant reading, browser mode via busybox httpd (loopback only), WebDAV cloud sync via curl (size-skip upload), config migration in customize.sh, WebUI settings through an allowlisted CLI `set` command, cadence tiers, and the merge-modules pattern.
+
 ## 3.8.0
 - HotMod v2.0.0 real-device lesson (FinaSU, 2026-11-25): passing a JS function as the `ksu.exec` callback never fires on some managers — the native KernelSU form takes the *name* of a global callback function. webui.md now requires the name form first (function form only as a throw-fallback), a `fetch("state.json")` fallback whenever the bridge result is null (a present bridge object is not proof exec answers), and bridge-liveness tracking so bridge-only buttons disable when exec is dead, not only when the bridge is absent. Symptom to recognize: device data renders (service-written JSON) while the module list hangs on "loading" and the freshness line never updates.
 
