@@ -7,7 +7,9 @@ DBG_ID="@ID@"
 DBG_DIR="$MODDIR"
 DBG_STAGE="boot-completed"
 . "$MODDIR/dbg.sh"
+. "$MODDIR/guard.sh"
 
 dbg_stage_begin
+bt_guard_clear
 dbg_log INFO "stage end"
 dbg_sync
