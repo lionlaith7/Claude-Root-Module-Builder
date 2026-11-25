@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.5.0
+- Visual identity for the repo: generated artwork in `assets/images/` (banner, workflow loop, SysDiag Lab WebUI in dark and light), embedded in the README so visitors see what the skill produces before reading a word. Images follow the same Apple HIG-informed tokens as the WebUI design (charcoal, one blue accent, no text baked into artwork).
+
 ## 3.4.0
 - Repo presentation fixed: the GitHub About description described generic DevOps modules; it now describes what build-tools actually is (Android root modules for Magisk/KernelSU/FinaSU/APatch, debug logs, bootloop protection, Apple-style WebUI, every-agent support), and repo topics were added (magisk, kernelsu, android, root-module, claude-skill, ai-agent, agent-skills, webui, bootloop).
 - README rewritten per Apple writing principles (purpose first, clear hierarchy, concise labels, just what is necessary): one-line purpose, install, use, what you get, testing status, safety, condensed history with a CHANGELOG link. English, Arabic and Chinese sections kept in sync.
