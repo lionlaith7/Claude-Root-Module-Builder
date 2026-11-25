@@ -4,7 +4,12 @@
 
 Original skill by Laith Harb (https://github.com/lionlaith7) · Maintained by Laith Harb (lionlaith7), Jordan.
 
-## What is new in 3.2
+## What is new in 3.3
+- **Works with every AI agent:** the skill follows the open Agent Skills format. Install with `npx skills add lionlaith7/Claude-Root-Module-Builder` (Claude Code, Codex, Cursor, Antigravity, OpenCode, Windsurf, ...), or follow the per-agent instructions in `INSTALL.md`. A repo-root `AGENTS.md` points any agent at `build-tools/SKILL.md`.
+- **Apple HIG-informed WebUI design:** `references/webui.md` gained a design section (type scale, one accent color, grouped cards, light+dark tokens, 44 px targets, tab bar, segmented controls, tabular numbers, accessibility), learned from Apple's Human Interface Guidelines via dickwu/apple-design-skill. The `--webui` starter and SysDiag Lab were redesigned to match.
+- Richer skill description (frontmatter) so agents trigger it reliably.
+
+## What was new in 3.2
 - **Tested on a real device:** SysDiag Lab v1.0.0 log from the test device (Redmi Note 10 Pro / sweet, Android 16, FinaSU ksud 1.7.0) reached `PASS_REAL` (12/12 checks PASS, 0 errors). Device facts from that log are documented as T3 in `build-tools/references/compat.md`.
 - Bootloop protection playbook (`references/bootloop.md`): avoid / detect / recover, guard timeout, self-disable only.
 - WebUI rules (`references/webui.md`): self-contained `webroot/index.html`, zero external URLs, live bridge reads with file fallback, 250 ms polling floor.
@@ -20,11 +25,20 @@ Original skill by Laith Harb (https://github.com/lionlaith7) · Maintained by La
 - Honest statuses: `PASS_STRUCTURAL`, `PASS_SIMULATED`, `PASS_PARTIAL`, `PASS_REAL`, `NOT_TESTED`, `FAIL`. Only a log from a real phone whose hashes match the zip gives `PASS_REAL`.
 
 ## Install
+Works with Claude Code, Codex, Cursor, Windsurf, Gemini/Antigravity, Copilot and any agent that supports skills or rules files. Fastest:
+
+```bash
+npx skills add lionlaith7/Claude-Root-Module-Builder
+```
+
+Or clone and use the bundled installer (Claude Code):
+
 ```sh
 git clone https://github.com/lionlaith7/Claude-Root-Module-Builder
 sh Claude-Root-Module-Builder/install.sh      # --check, --uninstall, --ref, --sha256 available
 ```
-Or zip the `build-tools/` folder (the folder name must stay `build-tools`) and upload it as a skill.
+
+Or zip the `build-tools/` folder (the folder name must stay `build-tools`) and upload it as a skill. Per-agent instructions: see `INSTALL.md`. Agents that read `AGENTS.md` find a pointer at the repo root.
 
 ## Use
 Ask Claude: "Build a KernelSU module that ...". Install the zip, reboot, then send `Documents/<id>/<id>-debug.log` back.
@@ -41,7 +55,7 @@ See NOTICE.md (Magisk installer, GPL-3.0). This repository has no LICENSE file y
 
 ---
 ## العربية
-مهارة لـ Claude تبني مديولات روت (Magisk / KernelSU / FinaSU) لأي فكرة. كل مديول يكتب سجل أخطاء في `Documents/<id>/<id>-debug.log` لترفعه إلى Claude للتحسين. فيها أدوات فحص وبناء وتحليل سجل، وقوالب (basic, service, props, canary)، وحماية من bootloop (بعد 3 إقلاعات فاشلة يتعطل المديول). تم الاختبار على هاتف حقيقي (Redmi Note 10 Pro، FinaSU) ووصلت وحدة SysDiag Lab إلى PASS_REAL. الاسم الصحيح لمجلد المهارة: `build-tools`.
+مهارة لـ Claude تبني مديولات روت (Magisk / KernelSU / FinaSU) لأي فكرة. كل مديول يكتب سجل أخطاء في `Documents/<id>/<id>-debug.log` لترفعه إلى Claude للتحسين. فيها أدوات فحص وبناء وتحليل سجل، وقوالب (basic, service, props, canary)، وحماية من bootloop (بعد 3 إقلاعات فاشلة يتعطل المديول). تم الاختبار على هاتف حقيقي (Redmi Note 10 Pro، FinaSU) ووصلت وحدة SysDiag Lab إلى PASS_REAL. تعمل المهارة مع كل وكلاء الذكاء الاصطناعي (Claude Code, Codex, Cursor, Windsurf, Gemini, Copilot) — راجع `INSTALL.md`. الاسم الصحيح لمجلد المهارة: `build-tools`.
 
 ## 中文
-这是一个 Claude 技能，可为任何想法构建 Android root 模块（Magisk / KernelSU / FinaSU）。每个模块都会把调试日志写到 `Documents/<id>/<id>-debug.log`，上传给 Claude 即可改进。包含检查、打包、日志分析工具，模板（basic、service、props、canary），以及防启动循环保护（3 次未完成启动后自动禁用）。已在真机上测试（Redmi Note 10 Pro、FinaSU），SysDiag Lab 达到了 PASS_REAL。技能文件夹名必须是 `build-tools`。
+这是一个 Claude 技能，可为任何想法构建 Android root 模块（Magisk / KernelSU / FinaSU）。每个模块都会把调试日志写到 `Documents/<id>/<id>-debug.log`，上传给 Claude 即可改进。包含检查、打包、日志分析工具，模板（basic、service、props、canary），以及防启动循环保护（3 次未完成启动后自动禁用）。已在真机上测试（Redmi Note 10 Pro、FinaSU），SysDiag Lab 达到了 PASS_REAL。本技能适用于所有 AI 代理（Claude Code、Codex、Cursor、Windsurf、Gemini、Copilot），见 `INSTALL.md`。技能文件夹名必须是 `build-tools`。
