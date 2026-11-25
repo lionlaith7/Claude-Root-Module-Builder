@@ -12,7 +12,7 @@ description: >
   Not for ordinary apps. Verified on a real device (PASS_REAL, 2026-11-25).
 ---
 
-# build-tools v3.3 - root module expert
+# build-tools v3.4 - root module expert
 
 Reply in the user's language (Arabic: simple, short). Phone users read little: lead with the result.
 
