@@ -75,10 +75,13 @@ def main():
             fh.write("\nwm size\ncat /sys/class/thermal/thermal_zone0/temp\n")
         with open(os.path.join(bad, "webroot", "index.html"), "a") as fh:
             fh.write('<script src="https://example.com/x.js"></script>\n')
+        with open(os.path.join(bad, "webroot", "bridge-only.html"), "w") as fh:
+            fh.write('<script>ksu.exec("id", "{}", function(){});</script>\n')
         r = lint(bad)
         check("lint catches wm (LM035)", "LM035" in r.stdout, r.stdout)
         check("lint catches external URL (LM036)", "LM036" in r.stdout, r.stdout)
         check("lint catches unfiltered thermal (LM038)", "LM038" in r.stdout, r.stdout)
+        check("lint catches bridge without fallback (LM040)", "LM040" in r.stdout, r.stdout)
 
         # Simulate canary + service stages under dash.
         for kind in ("canary", "service"):
