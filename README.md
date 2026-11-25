@@ -31,10 +31,18 @@ First time on a new phone: ask for the **canary** module and send its log. It do
 - **Debug log in every module.** Spooled in `/data/adb/<id>-logs/` early in boot, copied to `/sdcard/Documents/<id>/<id>-debug.log` when storage is ready. Upload it to your agent to improve the module.
 - **Bootloop protection.** A guard disables the module after 3 unfinished boots or 180 s without boot completing — self-disable only, never reboots, never touches other modules. Full playbook in `build-tools/references/bootloop.md`.
 - **Honest statuses.** `PASS_STRUCTURAL`, `PASS_SIMULATED`, `PASS_PARTIAL`, `PASS_REAL`, `NOT_TESTED`, `FAIL` — printed by the tools only. `PASS_REAL` requires a log from a real phone whose hashes match the built zip.
-- **Live WebUI when you want one.** Self-contained `webroot/index.html`, zero external URLs, sub-second live reads with a file fallback, designed to Apple HIG-informed tokens (grouped cards, one accent color, light and dark, 44 px targets).
+- **Live WebUI when you want one.** Self-contained `webroot/index.html`, zero external URLs, sub-second live reads with a file fallback, designed to the unified design system in `build-tools/references/design.md` (FinaSU theme + Apple HIG principles + Material Design 3 anatomy, with hard smoothness budgets).
 
   <img src="assets/images/webui-dark.webp" alt="SysDiag Lab WebUI in dark mode" width="270"> <img src="assets/images/webui-light.webp" alt="SysDiag Lab WebUI in light mode" width="270">
-- **Tools.** `new_module.py` (scaffold, `--webui` included), `lint_module.py` (rules LM001–LM039), `build_zip.py` (same input = same zip, plus sha256 manifest), `parse_report.py` (reads the log, prints the status). Templates: `basic`, `service`, `props`, `canary`.
+- **Tools.** `new_module.py` (scaffold, `--webui` included), `lint_module.py` (rules LM001–LM040), `build_zip.py` (same input = same zip, plus sha256 manifest), `parse_report.py` (reads the log, prints the status). Templates: `basic`, `service`, `props`, `canary`.
+
+## Also in this repo: skill-router
+
+**[skill-router](skill-router/README.md)** — a small meta-skill for agents with large skill catalogs: classify the task, search the catalog, read the best candidates, pick one primary skill (plus at most two supporting ones), and follow them — with precedence rules, anti-patterns, and catalog hygiene. Born after installing 500+ skills and learning that an unrouted catalog is just noise.
+
+```bash
+npx skills add lionlaith7/Claude-Root-Module-Builder --skill skill-router
+```
 
 ## Testing status
 
