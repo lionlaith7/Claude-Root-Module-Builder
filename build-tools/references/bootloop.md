@@ -54,6 +54,17 @@ four protectors disable all modules (or, in AshReXcue, only the module that
 changed since the last clean boot). Disabling others from inside a normal
 module hides the culprit and can break the user's security modules.
 
+Observed on a real device (T3, 2026-11-25, SysDiag Lab on FinaSU): the
+first boot after install was interrupted by a second reboot before
+`service.sh` cleared the counter, so the counter reached 2 on a healthy
+module. The second boot completed (boot_completed at ~61 s uptime), the
+counter reset, and nothing was disabled. Lessons: the counter counts
+boots, not failures — quick manual reboots right after install spend the
+same budget as real failures, so tell the user to let the first boot
+finish; and a counter below the limit that later resets is normal, not a
+near-miss to panic about. The `boot_start` epoch stamp from that boot
+predated time sync (1975 clock) — use uptime for timing, never that stamp.
+
 ## 3. Before a risky flash (prepare)
 
 1. Backup of boot/data the user cares about. Know how to reach recovery or
