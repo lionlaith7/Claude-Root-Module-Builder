@@ -19,10 +19,11 @@ Markers parse_report.py understands
 
 How to analyse an uploaded log
 1. `python3 -I scripts/parse_report.py LOG --manifest MANIFEST`.
-2. Stages missing? That stage never ran: wrong file name, not executable, or manager lacks it.
+2. Stages missing? That stage never ran: wrong file name, or manager lacks it. (T3: a missing exec bit does NOT stop a stage on FinaSU — the manager runs scripts via sh.)
 3. FAIL checks / ERROR lines: fix the code at that line's stage.
-4. AVC lines: see selinux-mounting.md; add the narrowest `sepolicy.rule`.
-5. HASH mismatch: the user ran an older zip; ask for a re-install.
-6. boots>1 without BOOT completed: bootloop suspicion; check the `disable` file.
+4. AVC lines: they are system-wide, not module-only (observed 2026-11-25: AVC count=50, none from the module's own context). Filter by `scontext` and by paths under the module before blaming the module or writing a rule. See selinux-mounting.md.
+5. HASH mismatch: the user ran an older zip; ask for a re-install. Exception: files the module rewrites at runtime (e.g. `webroot/*.json` copied from Documents) always mismatch; that one is expected.
+6. boots>1 without BOOT completed: bootloop suspicion; check the `disable` file. Nuance (T3): a quick manual reboot right after install also increments the guard counter — observed counter=2 on a healthy module whose first boot was interrupted by a second reboot. One interrupted boot is not a loop; look for repeated STAGE begin without BOOT completed.
+7. Early-boot wall-clock timestamps can be bogus before time sync (observed `1975-04-01`); order those lines by `uptime=`. The guard's `boot_start` epoch stamp has the same limit; the timeout check itself uses uptime and is unaffected.
 
-Privacy: the log has no serials, accounts or tokens. Set `DBG_NO_MODLIST=1` to hide the other-modules list. Never add secrets to logs.
+Privacy: the log has no serials, accounts or tokens. Set `DBG_NO_MODLIST=1` to hide the other-modules list. Never add secrets to logs. Never publish a raw device log: AVC lines carry other apps' package names and paths, and SNAP lists installed module names. Publish aggregated facts only.
