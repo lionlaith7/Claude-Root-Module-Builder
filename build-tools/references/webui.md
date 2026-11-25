@@ -30,6 +30,10 @@ every manager, without hurting boot or battery.
 - Poll with `setInterval` at 250 ms or slower (500 ms is a good default).
   Pause when `document.hidden` (visibilitychange), resume when visible,
   and stop on unload. Never busy-loop, never `requestAnimationFrame` to poll.
+  A user-facing speed selector (250/500/1000 ms) is fine; 250 ms is the floor.
+- Thermal values from `/sys/class/thermal` need the same sanity filter as
+  in patterns.md (plausible range, drop non-temperature zones) before
+  charting — a raw max can be a voltage or a step value, not a temperature.
 - WebUI polling is read-only and must not drive `service.sh`. The service
   keeps its own staggered light/heavy cycles (see bootloop.md) and capped
   history. Live charts keep their rolling buffer in JS memory only.
@@ -56,3 +60,9 @@ every manager, without hurting boot or battery.
   path, not only the bridge path.
 - Simulation has no bridge and no Android sysfs. The WebUI must still load,
   show its empty states, and keep its charts from throwing.
+- Real-device status (2026-11-25): SysDiag Lab v1.0.0 with a live-polling
+  WebUI (250/500/1000 ms selector, bridge + file fallback) reached
+  PASS_REAL on the FinaSU test device for its service/probe side. Whether
+  the FinaSU manager's WebView exposes `ksu.exec` is still T4 until the
+  user reports the in-WebUI bridge test result; the fallback path is the
+  one proven by the log.
