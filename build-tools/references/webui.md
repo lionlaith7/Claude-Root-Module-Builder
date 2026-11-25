@@ -91,3 +91,16 @@ Concrete tokens (CSS):
   read the service-written JSON file instead. Lint LM040 warns when a
   WebUI uses `ksu.exec` with no `fetch` fallback. When no bridge exists,
   disable bridge-only buttons instead of leaving dead controls.
+- Callback form matters (HotMod v2.0.0, real device 2026-11-25): the
+  WebUI passed a JS *function* as the third argument to `ksu.exec` and
+  never got a callback on the FinaSU manager, while the service-written
+  `device.json` rendered fine — the tell-tale sign is "device data OK,
+  module list stuck on loading, freshness never updates". The native
+  KernelSU bridge form is `ksu.exec(cmd, options, "globalCallbackName")`
+  where the third argument is the *name* of a global function. Rule:
+  register a uniquely-named global callback and pass its name first;
+  fall back to the function form only if that throws. And the state
+  read must fall back to `fetch("state.json")` whenever the bridge
+  result is null — having a bridge object present is not proof that
+  exec answers. Track bridge liveness (answered / dead) and disable
+  bridge-only buttons when it is dead, not only when it is absent.
