@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.8.0
+- HotMod v2.0.0 real-device lesson (FinaSU, 2026-11-25): passing a JS function as the `ksu.exec` callback never fires on some managers — the native KernelSU form takes the *name* of a global callback function. webui.md now requires the name form first (function form only as a throw-fallback), a `fetch("state.json")` fallback whenever the bridge result is null (a present bridge object is not proof exec answers), and bridge-liveness tracking so bridge-only buttons disable when exec is dead, not only when the bridge is absent. Symptom to recognize: device data renders (service-written JSON) while the module list hangs on "loading" and the freshness line never updates.
+
 ## 3.7.0
 - HotMod real-device lessons (FinaSU, 2026-11-25): a module backend can work perfectly while its WebUI hangs on "loading" if the bridge path has no file fallback. New lint rule LM040 warns when a WebUI uses `ksu.exec` without a `fetch` fallback; webui.md now requires a timeout + fallback on every bridge read and disabled bridge-only buttons when no bridge exists.
 - patterns.md: hot-install / live-apply pattern (official `MODULE_HOT_INSTALL_REQUEST` + `MODULE_HOT_RUN_SCRIPT`, container loaders, props backup/revert, tracked bind mounts behind a config flag, Zygisk never hot-loads, zip-slip guard on extraction).
