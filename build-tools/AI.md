@@ -1,13 +1,13 @@
 # AI.md - build-tools
 
 ## Identity
-- Name: build-tools (Claude skill), version 3.0.0
+- Name: build-tools (Claude skill), version 3.1.0
 - Purpose: build, lint, package and debug Android root modules (Magisk, KernelSU, KernelSU-Next, FinaSU) for any idea. Every module writes a debug log to Documents.
 - Folder name must equal the skill name: `build-tools`.
 
 ## File map
 - `SKILL.md`: short instructions (workflow, rules, statuses).
-- `references/`: evidence, anatomy, logging, selinux-mounting, patterns, device-testing, compat, safety.
+- `references/`: evidence, anatomy, logging, selinux-mounting, patterns, device-testing, compat, safety, bootloop.
 - `scripts/`: `new_module.py`, `lint_module.py`, `build_zip.py`, `parse_report.py` (Python 3 stdlib only; run with `python3 -I`).
 - `assets/templates/`: `_common` (dbg.sh, guard.sh, customize.sh, uninstall.sh, module.prop, official update-binary) plus kinds basic, service, props, canary.
 - `evals/evals.json`: test prompts with expectations.
@@ -26,5 +26,5 @@ request -> scaffold -> edit YOUR WORK block -> lint -> build zip + manifest -> u
 `python3 -I tests/test_all.py` (needs dash or sh).
 
 ## Signatures
-- Skill: build-tools 3.0.0. Developer: Laith Harb, GitHub lionlaith7, Jordan.
+- Skill: build-tools 3.1.0. Developer: Laith Harb, GitHub lionlaith7, Jordan.
 - Models used in development: claude-sonnet-5-5, claude-haiku-5-5.
