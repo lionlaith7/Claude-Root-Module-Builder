@@ -5,45 +5,54 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>@NAME@</title>
 <style>
-  /* Apple HIG-informed tokens (see references/webui.md): one accent, grouped
-     cards, tabular numbers, light+dark, 44px targets, safe areas. */
+  /* Unified design system (references/design.md): FinaSU theme default dark,
+     Apple HIG principles, Material 3 roles. One accent, grouped cards,
+     tabular numbers, 44px targets, safe areas, render-in-place updates. */
   :root {
-    --bg:#f2f2f7; --card:#ffffff; --text:#1c1c1e; --secondary:#6e6e73;
-    --accent:#007aff; --separator:#e5e5ea; --track:#e9e9ee;
-    --ok:#34c759; --warn:#ff9500;
-    --bar:rgba(249,249,249,.82);
+    --primary:#ff4d7e; --on-primary:#ffffff;
+    --primary-container:#3d1f3a; --on-primary-container:#ffb3c9;
+    --bg:#0a0f24; --bg-grad:linear-gradient(180deg,#0a0f24 0%,#121a3d 60%,#1a1030 100%);
+    --surface:#171f45; --surface-variant:#1e2856;
+    --on-surface:#f5f0f4; --on-surface-variant:#b9a8c9;
+    --outline:rgba(255,255,255,.08);
+    --error:#ff453a; --success:#30d158; --warning:#ff9f0a;
+    --bar:rgba(10,15,36,.82);
   }
-  @media (prefers-color-scheme: dark) {
+  @media (prefers-color-scheme: light) {
     :root {
-      --bg:#1c1c1e; --card:#2c2c2e; --text:#ffffff; --secondary:#98989f;
-      --accent:#0a84ff; --separator:#3a3a3c; --track:#3a3a3c;
-      --ok:#30d158; --warn:#ff9f0a;
-      --bar:rgba(28,28,30,.82);
+      --primary:#d81b60; --on-primary:#ffffff;
+      --primary-container:#ffd9e4; --on-primary-container:#5c0a2e;
+      --bg:#f2f2f7; --bg-grad:#f2f2f7;
+      --surface:#ffffff; --surface-variant:#e9e9f2;
+      --on-surface:#1c1c1e; --on-surface-variant:#6e6e73;
+      --outline:rgba(60,60,67,.18);
+      --error:#d70015; --success:#248a3d; --warning:#b25f00;
+      --bar:rgba(249,249,249,.82);
     }
   }
   * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
   body {
-    margin:0; background:var(--bg); color:var(--text);
-    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
-    font-size:17px; line-height:1.35;
+    margin:0; background:var(--bg-grad); background-attachment:fixed; color:var(--on-surface);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,"Noto Sans Arabic",sans-serif;
+    font-size:17px; line-height:1.35; min-height:100vh;
   }
   header {
     padding:calc(18px + env(safe-area-inset-top)) 16px 6px;
-    max-width:720px; margin:0 auto;
+    max-width:640px; margin:0 auto;
   }
   h1 { margin:0; font-size:34px; font-weight:700; letter-spacing:-.4px; }
-  .sub { color:var(--secondary); font-size:15px; margin-top:4px; }
-  .dot { display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--ok); margin-inline-end:6px; vertical-align:1px; }
-  .dot.stale { background:var(--warn); }
-  main { padding:10px 16px calc(24px + env(safe-area-inset-bottom)); max-width:720px; margin:0 auto; }
-  .card { background:var(--card); border-radius:18px; padding:16px; margin-bottom:14px; }
+  .sub { color:var(--on-surface-variant); font-size:15px; margin-top:4px; }
+  .dot { display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--success); margin-inline-end:6px; vertical-align:1px; }
+  .dot.stale { background:var(--warning); }
+  main { padding:10px 16px calc(24px + env(safe-area-inset-bottom)); max-width:640px; margin:0 auto; }
+  .card { background:var(--surface); border:1px solid var(--outline); border-radius:18px; padding:16px; margin-bottom:12px; }
   .card h2 { margin:0 0 8px; font-size:17px; font-weight:600; }
   .big { font-size:34px; font-weight:700; letter-spacing:-.4px; font-variant-numeric:tabular-nums; }
-  .small { font-size:13px; color:var(--secondary); margin-top:6px; line-height:1.5; }
-  .bar { height:8px; border-radius:99px; background:var(--track); overflow:hidden; margin-top:12px; }
-  .bar > div { height:100%; background:var(--accent); border-radius:99px; transition:width .35s ease; }
+  .small { font-size:13px; color:var(--on-surface-variant); margin-top:6px; line-height:1.5; }
+  .bar { height:8px; border-radius:99px; background:var(--surface-variant); overflow:hidden; margin-top:12px; }
+  .bar > div { height:100%; background:var(--primary); border-radius:99px; transition:width .35s cubic-bezier(.2,0,0,1); }
   button {
-    background:var(--accent); color:#fff; border:0; border-radius:14px;
+    background:var(--primary); color:var(--on-primary); border:0; border-radius:999px;
     padding:14px 16px; font-size:17px; font-weight:600; width:100%;
     min-height:50px; cursor:pointer; font-family:inherit;
   }
@@ -75,19 +84,26 @@
 </main>
 <script>
 "use strict";
-/* Starter WebUI following references/webui.md: self-contained, zero external
-   URLs, bridge feature-detected, file fallback, textContent only, freshness. */
+/* Starter WebUI following references/webui.md + references/design.md:
+   self-contained, zero external URLs, bridge feature-detected with the
+   native callback-NAME form first (function form as throw-fallback),
+   file fallback on any null bridge result, textContent only, freshness. */
 const $ = id => document.getElementById(id);
 const num = v => { const n = parseFloat(v); return isNaN(n) ? 0 : n; };
-let timer = null, lastOk = 0;
+let timer = null, lastOk = 0, cbSeq = 0;
 function hasBridge() { try { return typeof ksu !== "undefined" && typeof ksu.exec === "function"; } catch (e) { return false; } }
 function execRead(cmd) {
   return new Promise(resolve => {
     if (!hasBridge()) { resolve(null); return; }
     let done = false;
-    const finish = v => { if (!done) { done = true; resolve(v); } };
-    try { ksu.exec(cmd, "{}", (errno, stdout) => finish(errno === 0 ? String(stdout || "") : null)); }
-    catch (e) { finish(null); }
+    const name = "__bt_cb_" + (++cbSeq);
+    const finish = v => { if (!done) { done = true; try { delete window[name]; } catch (e) {} resolve(v); } };
+    window[name] = (errno, stdout) => finish(errno === 0 ? String(stdout || "") : null);
+    try { ksu.exec(cmd, "{}", name); }
+    catch (e) {
+      try { ksu.exec(cmd, "{}", (errno, stdout) => finish(errno === 0 ? String(stdout || "") : null)); }
+      catch (e2) { finish(null); }
+    }
     setTimeout(() => finish(null), 1500);
   });
 }
