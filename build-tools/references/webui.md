@@ -53,22 +53,20 @@ every manager, without hurting boot or battery.
   and never runs a command the user did not trigger or that is not a
   read-only status read.
 
-## Design (Apple HIG-informed)
+## Design
 
-Design language learned from Apple's Human Interface Guidelines (via dickwu/apple-design-skill). A module WebUI is a utility: purpose first, then craft.
+One unified design system: **FinaSU theme (default dark) + Apple HIG
+principles + Material Design 3 anatomy** — color roles and tokens, type
+scale, shape/elevation, components (navigation bar, banner cards,
+segmented control, switches, stat tiles), motion and smoothness budgets,
+RTL and accessibility. Full spec: `references/design.md`. Read it before
+writing any WebUI; start from `assets/templates/webroot-starter/`, which
+ships the tokens.
 
-Principles: **purpose** (the one job is obvious), **agency** (status is visible, actions are reversible), **responsibility** (transparent about what is collected; nothing leaves the device), **familiarity** (grouped cards, tab bar, system patterns), **flexibility** (light+dark, RTL, larger text), **simplicity** (every element earns its place), **craft** (alignment, spacing, wording), **delight** (calm confidence, not decoration).
-
-Concrete tokens (CSS):
-- Type scale (px ≈ pt): Large Title 34/700, Title 22/700, Headline 17/600, Body 17/400, Callout 16, Subheadline 15, Footnote 13, Caption 12. Never below 11. Avoid light weights (use 400/500/600/700). Numbers always `font-variant-numeric: tabular-nums`.
-- Colors: one accent only (blue: `#007aff` light, `#0a84ff` dark). Backgrounds: light `#f2f2f7` grouped with white cards; dark `#1c1c1e` base (never pure black) with `#2c2c2e` cards and `#3a3a3c` separators. Text: primary `#1c1c1e`/`#ffffff`, secondary `#6e6e73`/`#98989f`. Semantic colors only for meaning (green ok, orange warn, red error), never decoration.
-- Layout: 16 px side margins, 12-16 px card padding, 16-20 px card radius, hairline separators inside groups, safe-area insets (`env(safe-area-inset-*)`) for header/tab bar.
-- Controls: touch targets ≥ 44×44 px; segmented control for 2-4 mutually exclusive choices; tab bar (3-5 tabs, icon + label, selected = accent) for top-level sections; primary button = filled accent, one per view.
-- Materials: functional layer (header, tab bar) may use translucency (`backdrop-filter: blur`) over content; never apply glass to content cards, never stack glass on glass.
-- Charts: label axes or values, don't rely on color alone, align chart edges with card edges, keep gridlines faint.
-- Feedback: status (live/stale, last update) sits next to the data it describes; confirm significant actions; empty states say what to do next.
-- Accessibility: contrast ≥ 4.5:1 for body text; respect `prefers-reduced-motion` and `prefers-color-scheme`; mirror layout in RTL (logical properties: margin-inline, inset-inline).
-- Writing: labels say what happens ("Refresh now", not "OK"); sentence case; errors direct the user, never blame.
+Non-negotiables (details in design.md): one accent color; grouped cards;
+tabular numbers; 44 px targets; status next to its data; render in
+place (no list rebuild per poll); animate transform/opacity only;
+backdrop-filter on bars only; index.html under ~200 KB.
 
 ## Compatibility
 
