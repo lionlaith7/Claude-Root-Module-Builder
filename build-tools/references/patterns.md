@@ -15,3 +15,4 @@ General rules
 - Validate numbers (`case ... *[!0-9]*`), clamp ranges, quote variables.
 - Prefer `service.sh`. In post-fs-data do only what must precede mounting.
 - Use `BT_ONCE=1` to run a loop template once in simulation.
+- Bootloop avoidance: settle after boot before heavy work, stagger light and heavy cycles, cap every file you grow, one untested module per reboot. See bootloop.md.
