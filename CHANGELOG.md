@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.7.0
+- HotMod real-device lessons (FinaSU, 2026-11-25): a module backend can work perfectly while its WebUI hangs on "loading" if the bridge path has no file fallback. New lint rule LM040 warns when a WebUI uses `ksu.exec` without a `fetch` fallback; webui.md now requires a timeout + fallback on every bridge read and disabled bridge-only buttons when no bridge exists.
+- patterns.md: hot-install / live-apply pattern (official `MODULE_HOT_INSTALL_REQUEST` + `MODULE_HOT_RUN_SCRIPT`, container loaders, props backup/revert, tracked bind mounts behind a config flag, Zygisk never hot-loads, zip-slip guard on extraction).
+- tests/test_all.py asserts LM040.
+
 ## 3.6.0
 - Research-first step (workflow step 0): before any new feature, search for prior art (existing modules, skills, repos, manager docs), adopt patterns deliberately, and state what the research changed. Added at the skill author's request after the bootloop-protector and Apple-design research rounds proved the value.
 
