@@ -1,9 +1,18 @@
 ---
 name: build-tools
-description: Expert builder of Android root modules for Magisk, KernelSU, KernelSU-Next and forks (FinaSU, APatch). Scaffolds, lints, zips and debugs modules (service.sh, post-fs-data.sh, system.prop, sepolicy, overlays). Every module writes a debug log to Documents for upload and analysis. Use for "module", "Magisk", "KernelSU", "root", "post-fs-data", "boot script", "bootloop", "log", "مديول", "وحدة", "روت", "ماجيسك", "سجل الأخطاء". Not for ordinary apps.
+description: >
+  Expert builder of Android root modules for Magisk, KernelSU, KernelSU-Next and forks
+  (FinaSU, APatch), with mandatory debug logging, bootloop protection and honest test
+  statuses. Use it to create, scaffold, lint, build, debug or explain a root module:
+  service.sh, post-fs-data.sh, boot-completed.sh, post-mount.sh, system.prop,
+  sepolicy.rule, overlays, action.sh, WebUI (webroot/index.html), canary probes,
+  bootloop rescue, or reading a module debug log the user uploaded. Triggers include
+  "module", "Magisk", "KernelSU", "root module", "post-fs-data", "boot script",
+  "bootloop", "debug log", "مديول", "وحدة", "روت", "ماجيسك", "سجل الأخطاء".
+  Not for ordinary apps. Verified on a real device (PASS_REAL, 2026-11-25).
 ---
 
-# build-tools v3.2 - root module expert
+# build-tools v3.3 - root module expert
 
 Reply in the user's language (Arabic: simple, short). Phone users read little: lead with the result.
 
@@ -33,6 +42,7 @@ Builds a working Magisk/KernelSU module for ANY idea (specialised in root module
 
 ## WebUI (when the module has one)
 - Entry: `webroot/index.html`, self-contained, zero external URLs (no CDN, fonts, images). System fonts, inline SVG icons, viewport meta, correct `lang`/`dir`.
+- Design follows Apple HIG principles (see references/webui.md): clear hierarchy, one accent color, grouped cards, tabular numbers, light+dark, 44 px touch targets, status near the content it describes.
 - Live data via the manager JS bridge when present (`ksu.exec`, feature-detected), falling back to relative `fetch` of JSON files the service wrote. One read-only exec per poll, small `/proc`+`/sys` reads only, 500 ms default, paused while hidden. Polling never drives `service.sh` and never writes files.
 - Always show freshness (last update + live/stale state). Device strings go in with `textContent`, never `innerHTML`. No secrets in the WebUI.
 - Full rules: references/webui.md. Read it before writing any WebUI.
