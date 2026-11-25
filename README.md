@@ -1,5 +1,7 @@
 # build-tools
 
+![build-tools: a phone dashboard, a module package, and its debug log](assets/images/banner.webp)
+
 **Build an Android root module for any idea, and know exactly what it did on your phone.**
 
 An AI skill for Magisk, KernelSU, KernelSU-Next, FinaSU and APatch. Every module it builds writes a debug log to `Documents/<id>/` that you send back for fixing, protects itself against bootloops, and reports honest test statuses — never a claim the tools did not print.
@@ -20,6 +22,8 @@ Per-agent instructions: [INSTALL.md](INSTALL.md). Agents that read `AGENTS.md` f
 
 Ask your agent: "Build a KernelSU module that ...". Install the zip, reboot, then send `Documents/<id>/<id>-debug.log` back.
 
+![The loop: scaffold, lint, build, flash, read the log, fix](assets/images/workflow.webp)
+
 First time on a new phone: ask for the **canary** module and send its log. It documents what your phone actually supports, so nothing is guessed.
 
 ## What you get
@@ -28,6 +32,8 @@ First time on a new phone: ask for the **canary** module and send its log. It do
 - **Bootloop protection.** A guard disables the module after 3 unfinished boots or 180 s without boot completing — self-disable only, never reboots, never touches other modules. Full playbook in `build-tools/references/bootloop.md`.
 - **Honest statuses.** `PASS_STRUCTURAL`, `PASS_SIMULATED`, `PASS_PARTIAL`, `PASS_REAL`, `NOT_TESTED`, `FAIL` — printed by the tools only. `PASS_REAL` requires a log from a real phone whose hashes match the built zip.
 - **Live WebUI when you want one.** Self-contained `webroot/index.html`, zero external URLs, sub-second live reads with a file fallback, designed to Apple HIG-informed tokens (grouped cards, one accent color, light and dark, 44 px targets).
+
+  <img src="assets/images/webui-dark.webp" alt="SysDiag Lab WebUI in dark mode" width="270"> <img src="assets/images/webui-light.webp" alt="SysDiag Lab WebUI in light mode" width="270">
 - **Tools.** `new_module.py` (scaffold, `--webui` included), `lint_module.py` (rules LM001–LM039), `build_zip.py` (same input = same zip, plus sha256 manifest), `parse_report.py` (reads the log, prints the status). Templates: `basic`, `service`, `props`, `canary`.
 
 ## Testing status
