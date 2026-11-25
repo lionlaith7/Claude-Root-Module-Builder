@@ -2,23 +2,54 @@
 <html lang="en" dir="ltr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>@NAME@</title>
 <style>
-  * { box-sizing: border-box; }
-  body { margin:0; font-family:system-ui,-apple-system,sans-serif; background:#0b1220; color:#e2e8f0; }
-  header { padding:18px 16px 8px; }
-  h1 { margin:0; font-size:22px; }
-  .sub { color:#94a3b8; font-size:14px; margin-top:6px; }
-  main { padding:12px 14px 20px; max-width:720px; margin:0 auto; }
-  .card { background:#1e293b; border:1px solid #334155; border-radius:16px; padding:15px; margin-bottom:12px; }
-  .card h2 { margin:0 0 10px; font-size:15px; color:#93c5fd; }
-  .big { font-size:30px; font-weight:800; font-variant-numeric:tabular-nums; }
-  .small { font-size:13px; color:#94a3b8; margin-top:6px; line-height:1.6; }
-  .dot { display:inline-block; width:10px; height:10px; border-radius:50%; background:#22c55e; margin-inline-end:6px; }
-  .dot.stale { background:#eab308; }
-  button { background:#2563eb; color:#fff; border:0; border-radius:12px; padding:13px 16px; font-size:15px; width:100%; min-height:48px; cursor:pointer; font-weight:700; }
-  code { direction:ltr; unicode-bidi:embed; }
+  /* Apple HIG-informed tokens (see references/webui.md): one accent, grouped
+     cards, tabular numbers, light+dark, 44px targets, safe areas. */
+  :root {
+    --bg:#f2f2f7; --card:#ffffff; --text:#1c1c1e; --secondary:#6e6e73;
+    --accent:#007aff; --separator:#e5e5ea; --track:#e9e9ee;
+    --ok:#34c759; --warn:#ff9500;
+    --bar:rgba(249,249,249,.82);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#1c1c1e; --card:#2c2c2e; --text:#ffffff; --secondary:#98989f;
+      --accent:#0a84ff; --separator:#3a3a3c; --track:#3a3a3c;
+      --ok:#30d158; --warn:#ff9f0a;
+      --bar:rgba(28,28,30,.82);
+    }
+  }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  body {
+    margin:0; background:var(--bg); color:var(--text);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+    font-size:17px; line-height:1.35;
+  }
+  header {
+    padding:calc(18px + env(safe-area-inset-top)) 16px 6px;
+    max-width:720px; margin:0 auto;
+  }
+  h1 { margin:0; font-size:34px; font-weight:700; letter-spacing:-.4px; }
+  .sub { color:var(--secondary); font-size:15px; margin-top:4px; }
+  .dot { display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--ok); margin-inline-end:6px; vertical-align:1px; }
+  .dot.stale { background:var(--warn); }
+  main { padding:10px 16px calc(24px + env(safe-area-inset-bottom)); max-width:720px; margin:0 auto; }
+  .card { background:var(--card); border-radius:18px; padding:16px; margin-bottom:14px; }
+  .card h2 { margin:0 0 8px; font-size:17px; font-weight:600; }
+  .big { font-size:34px; font-weight:700; letter-spacing:-.4px; font-variant-numeric:tabular-nums; }
+  .small { font-size:13px; color:var(--secondary); margin-top:6px; line-height:1.5; }
+  .bar { height:8px; border-radius:99px; background:var(--track); overflow:hidden; margin-top:12px; }
+  .bar > div { height:100%; background:var(--accent); border-radius:99px; transition:width .35s ease; }
+  button {
+    background:var(--accent); color:#fff; border:0; border-radius:14px;
+    padding:14px 16px; font-size:17px; font-weight:600; width:100%;
+    min-height:50px; cursor:pointer; font-family:inherit;
+  }
+  button:active { opacity:.75; }
+  code { direction:ltr; unicode-bidi:embed; font-size:12.5px; }
+  @media (prefers-reduced-motion: reduce) { .bar > div { transition:none; } }
 </style>
 </head>
 <body>
@@ -27,19 +58,20 @@
   <div class="sub"><span class="dot" id="dot"></span><span id="state">connecting…</span> · <span id="mode">—</span> · <span id="age">—</span></div>
 </header>
 <main>
-  <div class="card">
+  <section class="card" aria-label="Live status">
     <h2>Live</h2>
     <div class="big" id="load">—</div>
     <div class="small">Load average (1 min) · Memory used: <span id="mem">—</span></div>
+    <div class="bar" aria-hidden="true"><div id="memBar" style="width:0%"></div></div>
     <div class="small">Updated: <span id="updated">—</span></div>
-  </div>
-  <div class="card">
+  </section>
+  <section class="card">
     <button id="refreshBtn">Refresh now</button>
     <p class="small" style="margin-top:12px">
       Live updates every 0.5 s while this page is open (manager bridge when present, service files otherwise). Polling pauses while hidden and never writes files.<br>
       Log: <code>/sdcard/Documents/@ID@/@ID@-debug.log</code>
     </p>
-  </div>
+  </section>
 </main>
 <script>
 "use strict";
@@ -63,6 +95,7 @@ function show(load, memPct, updated) {
   lastOk = Date.now();
   $("load").textContent = load.toFixed(2);
   $("mem").textContent = memPct + "%";
+  $("memBar").style.width = Math.max(0, Math.min(100, memPct)) + "%";
   $("updated").textContent = updated || new Date().toLocaleTimeString("en-GB");
   freshness();
 }
