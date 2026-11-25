@@ -4,6 +4,7 @@
 Usage:
   python3 -I new_module.py --list
   python3 -I new_module.py --kind basic --id my_mod --name "My Mod" --desc "What it does" --out ./work
+  Add --webui to include a compliant webroot/ starter (see references/webui.md).
 
 Kinds: basic, service, props, canary. Never overwrites an existing folder.
 Kid note: this makes a new module folder from a ready pattern, with the diary (log) already built in.
@@ -70,6 +71,7 @@ def main():
     ap.add_argument("--versioncode", type=int, default=1)
     ap.add_argument("--author", default="you")
     ap.add_argument("--out", default=".")
+    ap.add_argument("--webui", action="store_true", help="include a webroot/ starter following references/webui.md")
     a = ap.parse_args()
     if a.list:
         for k, v in KINDS.items():
@@ -85,6 +87,8 @@ def main():
     os.makedirs(dest)
     copy_tree(os.path.join(TPL, "_common"), dest)
     copy_tree(os.path.join(TPL, a.kind), dest)
+    if a.webui:
+        copy_tree(os.path.join(TPL, "webroot-starter"), os.path.join(dest, "webroot"))
     desc = a.desc or a.name
     tokens = {
         "@ID@": a.id,
@@ -96,7 +100,7 @@ def main():
         "@DESC@": desc.replace("\n", " "),
     }
     substitute(dest, tokens)
-    print("CREATED %s (kind=%s)" % (dest, a.kind))
+    print("CREATED %s (kind=%s%s)" % (dest, a.kind, ", webui" if a.webui else ""))
     print("NEXT: edit the YOUR WORK block, then run lint_module.py and build_zip.py")
     return 0
 
