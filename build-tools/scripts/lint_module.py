@@ -122,11 +122,25 @@ def lint(path, skip_log_policy=False):
                 add("LM026", "ERROR", "writes into /system (use system/ folder in the module): " + n)
             if mid and re.search(r"/data/adb/modules/" + re.escape(mid) + r"(/|\b)", joined):
                 add("LM027", "WARN", "hardcoded own module path in %s; use MODDIR=${0%%/*}" % n)
+            if re.search(r"(^|[;&|\s])wm\s+(size|density|overscan|dismiss-keyguard)\b", joined):
+                add("LM035", "WARN", "wm command in %s: wm fails from a module service context (T3 2026-11-25); use dumpsys display or props" % n)
+            if "thermal_zone" in joined and not re.search(r"(-gt|-ge|-lt|-le|>|<)\s*120\b|120000|plausible|range|filter", joined):
+                add("LM038", "WARN", "thermal_zone reads in %s without a plausible-range filter; some zones are levels/voltages, not temperatures (see patterns.md)" % n)
     cz = files.get("customize.sh")
     if cz is not None:
         lines = [l.strip() for l in cz.decode("utf-8", "replace").splitlines() if l.strip() and not l.strip().startswith("#")]
         if any(re.match(r"exit(\s|$)", l) for l in lines):
             add("LM028", "ERROR", "customize.sh is sourced: use abort, never exit")
+    # WebUI rules (references/webui.md): self-contained, no external URLs, small.
+    for n, data in sorted(files.items()):
+        if n.startswith("webroot/") and n.endswith((".html", ".htm")):
+            html = data.decode("utf-8", "replace")
+            if re.search(r"https?://|src\s*=\s*[\"']//|href\s*=\s*[\"']//", html):
+                add("LM036", "ERROR", "external URL in %s: WebUI must be self-contained (no CDN, fonts, images)" % n)
+            if len(data) > 200 * 1024:
+                add("LM037", "WARN", "%s is %d KB: keep WebUI index.html under ~200 KB" % (n, len(data) // 1024))
+            if "innerHTML" in html:
+                add("LM039", "WARN", "innerHTML in %s: put device strings in the DOM with textContent only" % n)
     if not skip_log_policy:
         if "dbg.sh" not in files:
             add("LM030", "ERROR", "dbg.sh missing (every module must write the debug log)")
