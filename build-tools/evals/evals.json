@@ -26,7 +26,7 @@
       "id": 4,
       "prompt": "What does FinaSU support?",
       "expectations": [
-        "says T4 until canary; offers canary; no invented facts"
+        "answers with T3 facts from the 2026-11-25 real log for the test device (all five stages run, ksud 1.7.0); T4 for other devices/versions until their canary; no invented facts"
       ]
     },
     {
