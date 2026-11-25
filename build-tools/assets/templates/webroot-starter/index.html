@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>@NAME@</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:system-ui,-apple-system,sans-serif; background:#0b1220; color:#e2e8f0; }
+  header { padding:18px 16px 8px; }
+  h1 { margin:0; font-size:22px; }
+  .sub { color:#94a3b8; font-size:14px; margin-top:6px; }
+  main { padding:12px 14px 20px; max-width:720px; margin:0 auto; }
+  .card { background:#1e293b; border:1px solid #334155; border-radius:16px; padding:15px; margin-bottom:12px; }
+  .card h2 { margin:0 0 10px; font-size:15px; color:#93c5fd; }
+  .big { font-size:30px; font-weight:800; font-variant-numeric:tabular-nums; }
+  .small { font-size:13px; color:#94a3b8; margin-top:6px; line-height:1.6; }
+  .dot { display:inline-block; width:10px; height:10px; border-radius:50%; background:#22c55e; margin-inline-end:6px; }
+  .dot.stale { background:#eab308; }
+  button { background:#2563eb; color:#fff; border:0; border-radius:12px; padding:13px 16px; font-size:15px; width:100%; min-height:48px; cursor:pointer; font-weight:700; }
+  code { direction:ltr; unicode-bidi:embed; }
+</style>
+</head>
+<body>
+<header>
+  <h1>@NAME@</h1>
+  <div class="sub"><span class="dot" id="dot"></span><span id="state">connecting…</span> · <span id="mode">—</span> · <span id="age">—</span></div>
+</header>
+<main>
+  <div class="card">
+    <h2>Live</h2>
+    <div class="big" id="load">—</div>
+    <div class="small">Load average (1 min) · Memory used: <span id="mem">—</span></div>
+    <div class="small">Updated: <span id="updated">—</span></div>
+  </div>
+  <div class="card">
+    <button id="refreshBtn">Refresh now</button>
+    <p class="small" style="margin-top:12px">
+      Live updates every 0.5 s while this page is open (manager bridge when present, service files otherwise). Polling pauses while hidden and never writes files.<br>
+      Log: <code>/sdcard/Documents/@ID@/@ID@-debug.log</code>
+    </p>
+  </div>
+</main>
+<script>
+"use strict";
+/* Starter WebUI following references/webui.md: self-contained, zero external
+   URLs, bridge feature-detected, file fallback, textContent only, freshness. */
+const $ = id => document.getElementById(id);
+const num = v => { const n = parseFloat(v); return isNaN(n) ? 0 : n; };
+let timer = null, lastOk = 0;
+function hasBridge() { try { return typeof ksu !== "undefined" && typeof ksu.exec === "function"; } catch (e) { return false; } }
+function execRead(cmd) {
+  return new Promise(resolve => {
+    if (!hasBridge()) { resolve(null); return; }
+    let done = false;
+    const finish = v => { if (!done) { done = true; resolve(v); } };
+    try { ksu.exec(cmd, "{}", (errno, stdout) => finish(errno === 0 ? String(stdout || "") : null)); }
+    catch (e) { finish(null); }
+    setTimeout(() => finish(null), 1500);
+  });
+}
+function show(load, memPct, updated) {
+  lastOk = Date.now();
+  $("load").textContent = load.toFixed(2);
+  $("mem").textContent = memPct + "%";
+  $("updated").textContent = updated || new Date().toLocaleTimeString("en-GB");
+  freshness();
+}
+function freshness() {
+  const age = lastOk ? Math.round((Date.now() - lastOk) / 1000) : -1;
+  const stale = age < 0 || age > 5;
+  $("dot").className = "dot" + (stale ? " stale" : "");
+  $("state").textContent = stale ? "stale data" : "live";
+  $("age").textContent = age < 0 ? "no data yet" : (age + "s ago");
+}
+async function poll() {
+  if (document.hidden) return;
+  if (hasBridge()) {
+    $("mode").textContent = "bridge · 0.5s";
+    const out = await execRead("cat /proc/loadavg; echo ===; grep -E '^(MemTotal|MemAvailable):' /proc/meminfo");
+    if (out) {
+      const p = out.split("===");
+      const mt = /MemTotal:\s*(\d+)/.exec(p[1] || ""), ma = /MemAvailable:\s*(\d+)/.exec(p[1] || "");
+      const memPct = (mt && ma && +mt[1] > 0) ? Math.round((+mt[1] - +ma[1]) * 100 / +mt[1]) : 0;
+      show(num((p[0] || "").trim().split(/\s+/)[0]), memPct, "");
+      return;
+    }
+    $("mode").textContent = "files · fallback";
+  } else {
+    $("mode").textContent = "files · 2s";
+  }
+  try {
+    const r = await fetch("report.json?x=" + Date.now());
+    if (!r.ok) throw new Error("no report");
+    const d = await r.json();
+    show(num(d.loadavg), num(d.mem_used_pct), d.updated || "");
+  } catch (e) { freshness(); }
+}
+function start() { stop(); poll(); timer = setInterval(poll, hasBridge() ? 500 : 2000); }
+function stop() { if (timer) { clearInterval(timer); timer = null; } }
+document.addEventListener("visibilitychange", () => { document.hidden ? stop() : start(); });
+window.addEventListener("pagehide", stop);
+$("refreshBtn").addEventListener("click", poll);
+start();
+</script>
+</body>
+</html>
