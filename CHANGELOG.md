@@ -1,5 +1,9 @@
 # Changelog
 
+## 3.4.0
+- Repo presentation fixed: the GitHub About description described generic DevOps modules; it now describes what build-tools actually is (Android root modules for Magisk/KernelSU/FinaSU/APatch, debug logs, bootloop protection, Apple-style WebUI, every-agent support), and repo topics were added (magisk, kernelsu, android, root-module, claude-skill, ai-agent, agent-skills, webui, bootloop).
+- README rewritten per Apple writing principles (purpose first, clear hierarchy, concise labels, just what is necessary): one-line purpose, install, use, what you get, testing status, safety, condensed history with a CHANGELOG link. English, Arabic and Chinese sections kept in sync.
+
 ## 3.3.0
 - Multi-agent support: the skill follows the open Agent Skills format and now documents installation for every major agent. New repo-root `INSTALL.md` (skills CLI `npx skills add`, Claude Code, Claude.ai, Codex, Cursor, Windsurf, Gemini CLI/Antigravity, Muse, generic) and a repo-root `AGENTS.md` adapter pointing at `build-tools/SKILL.md`. README Install section rewritten accordingly (EN/AR/ZH kept in sync).
 - Apple HIG-informed WebUI design: new design section in `references/webui.md` (eight design principles; type scale 34/22/17/15/13/12 with tabular numbers; one accent color; grouped-card tokens for light `#f2f2f7`/white and dark `#1c1c1e`/`#2c2c2e`; 44 px touch targets; tab bar and segmented controls; materials/translucency rules; chart and feedback guidance; accessibility and RTL), learned from Apple's Human Interface Guidelines via dickwu/apple-design-skill. The `--webui` starter template was redesigned to those tokens, and SysDiag Lab v1.2.0 ships the same design.
