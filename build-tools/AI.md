@@ -1,7 +1,7 @@
 # AI.md - build-tools
 
 ## Identity
-- Name: build-tools (Claude skill), version 3.5.0
+- Name: build-tools (Claude skill), version 3.6.0
 - Purpose: build, lint, package and debug Android root modules (Magisk, KernelSU, KernelSU-Next, FinaSU) for any idea. Every module writes a debug log to Documents.
 - Folder name must equal the skill name: `build-tools`.
 
@@ -29,5 +29,5 @@ request -> scaffold -> edit YOUR WORK block -> lint -> build zip + manifest -> u
 Each published update adds 0.1 (3.1 -> 3.2 -> 3.3) and gets a CHANGELOG.md entry at the repo root.
 
 ## Signatures
-- Skill: build-tools 3.5.0. Developer: Laith Harb, GitHub lionlaith7, Jordan.
+- Skill: build-tools 3.6.0. Developer: Laith Harb, GitHub lionlaith7, Jordan.
 - Models used in development: claude-sonnet-5-5, claude-haiku-5-5.
