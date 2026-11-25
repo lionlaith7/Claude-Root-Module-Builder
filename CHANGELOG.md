@@ -1,5 +1,8 @@
 # Changelog
 
+## 3.6.0
+- Research-first step (workflow step 0): before any new feature, search for prior art (existing modules, skills, repos, manager docs), adopt patterns deliberately, and state what the research changed. Added at the skill author's request after the bootloop-protector and Apple-design research rounds proved the value.
+
 ## 3.5.0
 - Visual identity for the repo: generated artwork in `assets/images/` (banner, workflow loop, SysDiag Lab WebUI in dark and light), embedded in the README so visitors see what the skill produces before reading a word. Images follow the same Apple HIG-informed tokens as the WebUI design (charcoal, one blue accent, no text baked into artwork).
 
