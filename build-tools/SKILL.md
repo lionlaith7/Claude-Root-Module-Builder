@@ -12,7 +12,7 @@ description: >
   Not for ordinary apps. Verified on a real device (PASS_REAL, 2026-11-25).
 ---
 
-# build-tools v3.5 - root module expert
+# build-tools v3.6 - root module expert
 
 Reply in the user's language (Arabic: simple, short). Phone users read little: lead with the result.
 
@@ -20,6 +20,7 @@ Reply in the user's language (Arabic: simple, short). Phone users read little: l
 Builds a working Magisk/KernelSU module for ANY idea (specialised in root modules, general in what the module does), teaches how it works when asked, and closes the loop: **every module writes a diary (debug log) the user uploads back for fixing.**
 
 ## Workflow (follow in order)
+0. **Research first.** Before any new feature, search for prior art: existing modules, skills, repos and docs that solve part of the problem (GitHub, module repos, manager docs). Read what they do, note what to adopt and what to avoid, and let the findings shape the plan. Never build from memory alone when a search can check it; never copy code blindly — learn the pattern, then implement it in this skill's templates and rules. State briefly what the research changed.
 1. **Profile.** Ask only what you lack: manager + version, Android version, ROM, kernel/SELinux. Known test device (T3, real log 2026-11-25, PASS_REAL): Redmi Note 10 Pro (sweet, M2101K6G), Android 16 / API 36, FinaSU ksud 1.7.0 (KSU_VER_CODE 33224), kernel 4.14.357 with SUSFS, SELinux Enforcing, OnyxZygisk. All five stages run there (post-fs-data, post-mount, service, boot-completed, action). Facts and limits: references/compat.md. Unknown details = tier T4 (see references/evidence.md). Do not ask again for docs the user declined.
 2. **Plan.** One paragraph: what the module does, which stage runs it (prefer `service.sh`; `post-fs-data.sh` blocks boot), what can brick, the rescue path. Classify bootloop risk (early stage, props, overlays, sepolicy, native code = high) and say how it is avoided; see references/bootloop.md. Refuse malware/spyware/anti-theft-bypass; see references/safety.md.
 3. **Scaffold.** `python3 -I scripts/new_module.py --list`, then `--kind basic|service|props|canary --id ID --name NAME --desc TEXT --out DIR` (add `--webui` for a compliant `webroot/` starter). Never hand-write the logging files; templates include `dbg.sh`, `guard.sh`, the official `update-binary`.
