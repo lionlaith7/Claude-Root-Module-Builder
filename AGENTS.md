@@ -1,6 +1,9 @@
 # AGENTS.md
 
-This repository contains one agent skill: **build-tools**, an expert builder of Android root modules (Magisk, KernelSU, KernelSU-Next, FinaSU, APatch).
+This repository contains two agent skills by Laith Harb:
+
+- **build-tools** — an expert builder of Android root modules (Magisk, KernelSU, KernelSU-Next, FinaSU, APatch).
+- **skill-router** — a meta-skill that picks and combines the right installed skills per task (classify → search the catalog → read candidates → one primary + at most two supporting), with precedence rules and catalog hygiene. See `skill-router/SKILL.md`.
 
 For any root-module work (creating, scaffolding, linting, building, debugging or explaining a module, its boot scripts, system.prop, sepolicy, overlays, WebUI, canary probes, bootloop rescue, or a module debug log):
 
