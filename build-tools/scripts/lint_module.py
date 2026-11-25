@@ -141,6 +141,8 @@ def lint(path, skip_log_policy=False):
                 add("LM037", "WARN", "%s is %d KB: keep WebUI index.html under ~200 KB" % (n, len(data) // 1024))
             if "innerHTML" in html:
                 add("LM039", "WARN", "innerHTML in %s: put device strings in the DOM with textContent only" % n)
+            if "ksu.exec" in html and "fetch(" not in html:
+                add("LM040", "WARN", "ksu.exec in %s without a fetch fallback: a detected-but-silent bridge hangs the UI; always fall back to service-written JSON (HotMod v1.0 lesson, real device 2026-11-25)" % n)
     if not skip_log_policy:
         if "dbg.sh" not in files:
             add("LM030", "ERROR", "dbg.sh missing (every module must write the debug log)")
