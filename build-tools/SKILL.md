@@ -12,7 +12,7 @@ description: >
   Not for ordinary apps. Verified on a real device (PASS_REAL, 2026-11-25).
 ---
 
-# build-tools v3.8 - root module expert
+# build-tools v3.9 - root module expert
 
 Reply in the user's language (Arabic: simple, short). Phone users read little: lead with the result.
 
@@ -43,7 +43,7 @@ Builds a working Magisk/KernelSU module for ANY idea (specialised in root module
 
 ## WebUI (when the module has one)
 - Entry: `webroot/index.html`, self-contained, zero external URLs (no CDN, fonts, images). System fonts, inline SVG icons, viewport meta, correct `lang`/`dir`.
-- Design follows Apple HIG principles (see references/webui.md): clear hierarchy, one accent color, grouped cards, tabular numbers, light+dark, 44 px touch targets, status near the content it describes.
+- Design follows the unified design system (references/design.md): FinaSU theme as the default dark palette, Apple HIG principles, Material Design 3 roles/anatomy — one accent, grouped cards, banner cards, tabular numbers, light+dark, 44 px targets, status near the content it describes, and hard smoothness budgets (render in place, transform/opacity only, poll tiers).
 - Live data via the manager JS bridge when present (`ksu.exec`, feature-detected), falling back to relative `fetch` of JSON files the service wrote. One read-only exec per poll, small `/proc`+`/sys` reads only, 500 ms default, paused while hidden. Polling never drives `service.sh` and never writes files.
 - Always show freshness (last update + live/stale state). Device strings go in with `textContent`, never `innerHTML`. No secrets in the WebUI.
 - Full rules: references/webui.md. Read it before writing any WebUI.
@@ -64,4 +64,4 @@ Each published update adds 0.1 to the previous version (3.1 -> 3.2 -> 3.3). Ever
 Build the **canary** module (`--kind canary`), have the user install it with a rescue plan (references/device-testing.md), upload its log, and use the PROBE lines as device truth (tier T3).
 
 ## References (read when needed)
-evidence.md, anatomy.md, logging.md, selinux-mounting.md, patterns.md, device-testing.md, compat.md, safety.md, bootloop.md, webui.md
+evidence.md, anatomy.md, logging.md, selinux-mounting.md, patterns.md, device-testing.md, compat.md, safety.md, bootloop.md, webui.md, design.md
