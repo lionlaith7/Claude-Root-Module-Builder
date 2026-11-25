@@ -17,7 +17,7 @@ LINE = re.compile(r"^(\d{4}-\d\d-\d\d \d\d:\d\d:\d\d) (INFO|WARN|ERROR) \[([^\]]
 
 def parse(text):
     r = {"snap": {}, "stages": [], "checks": {}, "hashes": {}, "errors": [], "warns": [], "avc": 0,
-         "boot_completed": False, "boots": 0, "lines": 0, "probes": []}
+         "avc_msgs": [], "boot_completed": False, "boots": 0, "lines": 0, "probes": []}
     for raw in text.splitlines():
         m = LINE.match(raw)
         if not m:
@@ -48,9 +48,27 @@ def parse(text):
             r["boot_completed"] = True
         elif msg.startswith("AVC ") and "avc:" in msg:
             r["avc"] += 1
+            r["avc_msgs"].append(msg)
         elif msg.startswith("PROBE "):
             r["probes"].append(msg[6:])
     return r
+
+
+def module_avc_count(r):
+    """AVCs that plausibly belong to this module (its SELinux context or paths).
+
+    AVC lines in the log are system-wide (observed 2026-11-25: 50 AVCs, none
+    from the module). Only count a denial as the module's own when its source
+    context is the root-manager domain or it touches the module's own paths.
+    """
+    mid = r["snap"].get("module_id", "")
+    n = 0
+    for msg in r["avc_msgs"]:
+        if "scontext=u:r:ksu:s0" in msg or "scontext=u:r:magisk:s0" in msg:
+            n += 1
+        elif mid and ("/data/adb/modules/" + mid) in msg:
+            n += 1
+    return n
 
 
 def decide(r, manifest):
@@ -66,7 +84,14 @@ def decide(r, manifest):
         if r["snap"].get("module_id") != manifest.get("id"):
             return "FAIL", ["log module_id does not match manifest id"]
         want = {k: v for k, v in manifest.get("files", {}).items() if not k.startswith("META-INF")}
-        mism = [k for k, v in want.items() if r["hashes"].get(k) not in (None, v)]
+        mism_all = [k for k, v in want.items() if r["hashes"].get(k) not in (None, v)]
+        # Files the module rewrites at runtime (webroot data files copied from
+        # Documents) always differ from the built zip; that is expected, not a
+        # different build. Scripts, module.prop and index.html still must match.
+        runtime = [k for k in mism_all if k.startswith("webroot/") and not k.endswith("index.html")]
+        mism = [k for k in mism_all if k not in runtime]
+        if runtime:
+            reasons.append("runtime-rewritten webroot data differs from build (expected): " + ",".join(runtime[:5]))
         miss = [k for k in want if k not in r["hashes"]]
         if mism:
             return "FAIL", ["hash mismatch (log is from a different build): " + ",".join(mism[:5])]
@@ -105,7 +130,7 @@ def main():
     status, reasons = decide(r, manifest)
     out = {"status": status, "reasons": reasons, "stages_seen": sorted(set(r["stages"])), "boots": r["boots"],
            "boot_completed": r["boot_completed"], "errors": r["errors"][:20], "warns": len(r["warns"]),
-           "avc": r["avc"], "checks": r["checks"], "environment": {k: r["snap"].get(k, "") for k in
+           "avc": r["avc"], "avc_module": module_avc_count(r), "checks": r["checks"], "environment": {k: r["snap"].get(k, "") for k in
            ("kernel", "selinux", "uid", "shell", "sim", "version", "versionCode")}, "probes": r["probes"][:80]}
     if a.json:
         print(json.dumps(out, indent=2))
@@ -113,7 +138,7 @@ def main():
         print("ENV %s" % out["environment"])
         print("STAGES %s boots=%d boot_completed=%s" % (",".join(out["stages_seen"]), r["boots"], r["boot_completed"]))
         print("CHECKS %s" % r["checks"])
-        print("ERRORS %d WARNS %d AVC %d" % (len(r["errors"]), len(r["warns"]), r["avc"]))
+        print("ERRORS %d WARNS %d AVC %d (module %d)" % (len(r["errors"]), len(r["warns"]), r["avc"], out["avc_module"]))
         for e in r["errors"][:10]:
             print("  ERROR: " + e)
         for x in reasons:
