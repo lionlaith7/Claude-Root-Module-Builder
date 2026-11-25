@@ -7,7 +7,7 @@
 
 ## File map
 - `SKILL.md`: short instructions (workflow, rules, statuses).
-- `references/`: evidence, anatomy, logging, selinux-mounting, patterns, device-testing, compat, safety, bootloop.
+- `references/`: evidence, anatomy, logging, selinux-mounting, patterns, device-testing, compat, safety, bootloop, webui.
 - `scripts/`: `new_module.py`, `lint_module.py`, `build_zip.py`, `parse_report.py` (Python 3 stdlib only; run with `python3 -I`).
 - `assets/templates/`: `_common` (dbg.sh, guard.sh, customize.sh, uninstall.sh, module.prop, official update-binary) plus kinds basic, service, props, canary.
 - `evals/evals.json`: test prompts with expectations.
