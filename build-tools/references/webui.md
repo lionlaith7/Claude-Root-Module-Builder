@@ -83,3 +83,11 @@ Concrete tokens (CSS):
   the FinaSU manager's WebView exposes `ksu.exec` is still T4 until the
   user reports the in-WebUI bridge test result; the fallback path is the
   one proven by the log.
+- Bridge calls need a timeout AND a file fallback on failure (HotMod
+  v1.0, real device 2026-11-25): the module backend worked (Action log
+  proved scan/install/list), but the WebUI hung on "loading" because its
+  bridge path produced no render and had no fallback. Rule: every
+  `ksu.exec` read resolves within ~3 s; on timeout/error/parse failure,
+  read the service-written JSON file instead. Lint LM040 warns when a
+  WebUI uses `ksu.exec` with no `fetch` fallback. When no bridge exists,
+  disable bridge-only buttons instead of leaving dead controls.
