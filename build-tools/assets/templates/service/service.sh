@@ -41,6 +41,11 @@ echo $$ > "$LOCK/pid"
 trap 'rm -rf "$LOCK"; dbg_log INFO "service stopped"; dbg_sync' EXIT
 
 dbg_wait_boot 300
+bt_guard_check_timeout
+# Settle: let the system finish starting before heavy work. Heavy commands
+# right at boot are a common bootloop cause; see references/bootloop.md.
+# Skipped in simulation (BT_ONCE=1).
+if [ "${BT_ONCE:-0}" != 1 ]; then sleep 10; fi
 bt_guard_clear
 dbg_snapshot
 dbg_hash
