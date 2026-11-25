@@ -31,6 +31,12 @@ Builds a working Magisk/KernelSU module for ANY idea (specialised in root module
 - **Recover:** wait for the guard, then the recovery `disable` file, then re-enable one module at a time. Never wipe data, never run two protectors at once.
 - Full playbook: references/bootloop.md. Read it before any high-risk module (props, overlays, sepolicy, native code, early-stage work).
 
+## WebUI (when the module has one)
+- Entry: `webroot/index.html`, self-contained, zero external URLs (no CDN, fonts, images). System fonts, inline SVG icons, viewport meta, correct `lang`/`dir`.
+- Live data via the manager JS bridge when present (`ksu.exec`, feature-detected), falling back to relative `fetch` of JSON files the service wrote. One read-only exec per poll, small `/proc`+`/sys` reads only, 500 ms default, paused while hidden. Polling never drives `service.sh` and never writes files.
+- Always show freshness (last update + live/stale state). Device strings go in with `textContent`, never `innerHTML`. No secrets in the WebUI.
+- Full rules: references/webui.md. Read it before writing any WebUI.
+
 ## Status words (printed by tools only)
 `PASS_STRUCTURAL` files look right | `PASS_SIMULATED` ran under dash in a sandbox | `PASS_PARTIAL` some proof missing | `PASS_REAL` log from a real phone whose hashes match the built zip, zero errors, checks pass | `NOT_TESTED` | `FAIL`. Without a user log, the best you may say is PASS_SIMULATED. Say "not tested on your phone" plainly.
 
@@ -44,4 +50,4 @@ Builds a working Magisk/KernelSU module for ANY idea (specialised in root module
 Build the **canary** module (`--kind canary`), have the user install it with a rescue plan (references/device-testing.md), upload its log, and use the PROBE lines as device truth (tier T3).
 
 ## References (read when needed)
-evidence.md, anatomy.md, logging.md, selinux-mounting.md, patterns.md, device-testing.md, compat.md, safety.md, bootloop.md
+evidence.md, anatomy.md, logging.md, selinux-mounting.md, patterns.md, device-testing.md, compat.md, safety.md, bootloop.md, webui.md
