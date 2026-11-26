@@ -34,7 +34,10 @@ Or copy the `skill-router/` folder into your agent's skills directory.
 
 ## Version
 
-v1.0.0 (2026-11-25). Written after installing 500+ skills from the major
-public packs and learning that an unrouted catalog is just noise.
+v1.1.0 (2026-11-26). Lessons from a 24h self-test (48 graded routing
+runs): skill-name search phrasing, polysemy traps, read-the-body rule,
+catalog hygiene, and a measured safe active-catalog ceiling. v1.0.0 was
+written after installing 500+ skills from the major public packs and
+learning that an unrouted catalog is just noise.
 
 By Laith Harb ([lionlaith7](https://github.com/lionlaith7)), Jordan.
