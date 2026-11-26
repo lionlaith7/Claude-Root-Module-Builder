@@ -38,7 +38,7 @@ First time on a new phone: ask for the **canary** module and send its log. It do
 
 ## Also in this repo: skill-router
 
-**[skill-router](skill-router/README.md)** — a small meta-skill for agents with large skill catalogs: classify the task, search the catalog, read the best candidates, pick one primary skill (plus at most two supporting ones), and follow them — with precedence rules, anti-patterns, and catalog hygiene. Born after installing 500+ skills and learning that an unrouted catalog is just noise.
+**[skill-router](skill-router/README.md)** (v1.1.0) — a small meta-skill for agents with large skill catalogs: classify the task, search the catalog, read the best candidates, pick one primary skill (plus at most two supporting ones), and follow them — with precedence rules, anti-patterns, and catalog hygiene. Born after installing 500+ skills and learning that an unrouted catalog is just noise; v1.1.0 adds lessons from a 24h self-test (48 graded routing runs).
 
 ```bash
 npx skills add lionlaith7/Claude-Root-Module-Builder --skill skill-router
@@ -54,7 +54,7 @@ No malware, spyware, keyloggers, credential theft or anti-theft bypass. Keep a r
 
 ## What is new
 
-Version 3.4: corrected repo description, this README rewritten for clarity. Earlier highlights — 3.3: every-agent install (`INSTALL.md`, `AGENTS.md`) and Apple HIG-informed WebUI design; 3.2: first real-device `PASS_REAL`, log-derived fixes, AVC filtering, WebUI lint rules, `--webui` scaffold, test suite; 3.1: bootloop playbook and WebUI rules. Full history: [CHANGELOG.md](CHANGELOG.md). Each update adds 0.1.
+Version 3.9.0: unified design system (`build-tools/references/design.md` — FinaSU theme + Apple HIG principles + Material Design 3 anatomy, with hard speed/smoothness budgets) and nine new patterns from real-device work. Earlier highlights — 3.8: FinaSU `ksu.exec` callback-name rule and `state.json` fallback; 3.4: corrected repo description, this README rewritten for clarity; 3.3: every-agent install (`INSTALL.md`, `AGENTS.md`) and Apple HIG-informed WebUI design; 3.2: first real-device `PASS_REAL`, log-derived fixes, AVC filtering, WebUI lint rules, `--webui` scaffold, test suite; 3.1: bootloop playbook and WebUI rules. Full history: [CHANGELOG.md](CHANGELOG.md). Each update adds 0.1. skill-router is at v1.1.0 (lessons from a 24h self-test).
 
 ## Credits and license
 
@@ -69,3 +69,4 @@ See `NOTICE.md` (Magisk installer, GPL-3.0). This repository has no LICENSE file
 ## 中文
 
 这是一个 AI 技能，可为任何想法构建 Android root 模块（Magisk / KernelSU / KernelSU-Next / FinaSU / APatch）。每个模块都会把调试日志写到 `Documents/<id>/<id>-debug.log`，上传给你的代理即可改进；模块带有防启动循环保护，并给出诚实的测试状态。包含检查、打包、日志分析工具，模板（basic、service、props、canary），以及遵循 Apple 设计原则的实时 WebUI。已在真机上测试（Redmi Note 10 Pro、FinaSU），SysDiag Lab 达到了 PASS_REAL。本技能适用于所有 AI 代理（Claude Code、Codex、Cursor、Windsurf、Gemini、Copilot），见 `INSTALL.md`。技能文件夹名必须是 `build-tools`。
+
